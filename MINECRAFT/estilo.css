@@ -1,33 +1,98 @@
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+  user-select: none;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 body {
-      margin: 0;
-      background: #222;
-      overflow: hidden;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      color: white;
-      font-family: Arial, sans-serif;
-      user-select: none;
-    }
-    canvas {
-      background: #111;
-      border: 2px solid #444;
-      display: block;
-    }
-    #game-over {
-      position: absolute;
-      padding: auto;
-      top: 40%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      font-size: 48px;
-      color: red;
-      display: none;
-    }
+  margin: 0;
+  background: #222;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  color: white;
+  font-family: Arial, sans-serif;
+  user-select: none;
+}
+
+#game {
+  border: 2px solid #444;
+  background: #111;
+}
+
+canvas {
+  background: #111;
+  border: 2px solid #444;
+  display: block;
+}
+
+.score {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  font-size: 24px;
+  color: white;
+}
+
+#start-button, #restart-button {
+  padding: 10px 20px;
+  border-radius: 2.5rem !important;
+  font-family: bold;
+  font-size: 24px;
+  color: black;
+  background-color: blue;
+  border: none;
+  cursor: pointer;
+}
+
+.tela-início #start-button:hover, .game-over #restart-button:hover {
+  background-color: rgb(31, 31, 180);
+}
+
+.tela-início #start-button:active, .game-over #restart-button:active {
+  background-color: darkblue;
+}
+
+.tela-início #start-button:focus, .game-over #restart-button:focus {
+  outline: none;
+}
+
+.tela-início #start-button {
+  top: 20px;
+  left: 20px;
+  position: absolute;
+  z-index: 10;
+}
+
+.game-over #restart-button {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  z-index: 10;
+}
+
+.game-over #restart-button {
+  display: none;
+}
+
+.tela-início {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+}
+
+.game-over {
+  position: absolute;
+  padding: 10px 20px;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 48px;
+  color: red;
+  display: none;
+}
