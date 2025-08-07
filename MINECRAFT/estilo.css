@@ -18,12 +18,22 @@ body {
   user-select: none;
 }
 
+h1 {
+  position: absolute;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 3rem;
+  color: white;
+}
+
 #game {
   border: 2px solid #444;
   background: #111;
 }
 
 canvas {
+  position: relative;
   background: #111;
   border: 2px solid #444;
   display: block;
@@ -31,29 +41,32 @@ canvas {
 
 .score {
   position: absolute;
-  top: 10px;
-  left: 10px;
+  top: 16%;
+  left: 27%;
+  transform: translate(-50%, -50%);
   font-size: 24px;
   color: white;
 }
 
-#start-button, #restart-button {
+#start-button {
   padding: 10px 20px;
-  border-radius: 2.5rem !important;
+  position: absolute;
+  z-index: 10;
+  border-radius: 1.5rem;
   font-family: bold;
   font-size: 24px;
   color: black;
-  background-color: blue;
-  border: none;
+  background-color: rgb(0, 162, 255);
+  border: 2px solid #444;
   cursor: pointer;
 }
 
 .tela-início #start-button:hover, .game-over #restart-button:hover {
-  background-color: rgb(31, 31, 180);
+  background-color: rgb(0, 132, 255);
 }
 
 .tela-início #start-button:active, .game-over #restart-button:active {
-  background-color: darkblue;
+  background-color: rgb(53, 126, 223);
 }
 
 .tela-início #start-button:focus, .game-over #restart-button:focus {
