@@ -1,9 +1,7 @@
   const canvas = document.getElementById('game');
   const ctx = canvas.getContext('2d');
-
   const WIDTH = canvas.width;
   const HEIGHT = canvas.height;
-
   // Jogador
   const player = {
     x: WIDTH / 2,
@@ -14,12 +12,10 @@
     vx: 0,
     vy: 0,
   };
-
   // Tiros do jogador
   const shots = [];
   const shotSpeed = 8;
   const shotRadius = 5;
-
   // Inimigos
   const enemies = [];
   const enemyRadius = 15;
@@ -55,7 +51,7 @@
       x,
       y,
       radius: enemyRadius,
-      color: 'orange',
+      color: 'red',
       vx: 0,
       vy: 0,
     });
@@ -170,11 +166,6 @@
 
   // Atirar
   function shoot() {
-    // Tiro sai do centro da bola do jogador para cima
-    // Vamos fazer para onde o jogador estiver olhando? Para simplificar, tiro vai pra cima
-
-    // Ou tiro para a direção do movimento atual? Vou fazer que atira para cima fixo.
-
     shots.push({
       x: player.x,
       y: player.y - player.radius,
@@ -205,3 +196,13 @@
 
   // Começa o jogo
   gameLoop();
+
+  // Atualiza a pontuação
+  setInterval(() => {
+    if(!gameOver) {
+      score++;
+      document.querySelector('.score').textContent = `Score: ${score}`;
+    }
+
+  }, 1000);
+  
