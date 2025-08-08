@@ -1,3 +1,4 @@
+/* Reset e base */
 * {
   user-select: none;
   margin: 0;
@@ -6,106 +7,131 @@
 }
 
 body {
-  margin: 0;
   background: #222;
   overflow: hidden;
+  min-height: 100vh;
+  color: white;
+  font-family: Arial, sans-serif;
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
-  color: white;
-  font-family: Arial, sans-serif;
-  user-select: none;
 }
 
-h1 {
+/* Container do jogo com fundo e overlay */
+#gameContainer {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1;
+}
+#gameContainer:before {
+  content: '';
   position: absolute;
-  top: 20px;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 2;
+}
+#gameContainer:after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: url('https://i.imgur.com/4z5Z1bH.png') no-repeat center center;
+  background-size: cover;
+  z-index: 1;
+}
+
+/* Título centralizado */
+#titleContainer {
+  position: absolute;
+  top: 30px;
   left: 50%;
   transform: translateX(-50%);
-  font-size: 3rem;
-  color: white;
+  display: flex;
+  gap: 10px;
+  z-index: 10;
+}
+#titleContainer img {
+  height: 45px;
+  display: block;
 }
 
-#game {
-  border: 2px solid #444;
-  background: #111;
-}
-
-canvas {
+/* Canvas do jogo */
+#game, canvas {
   position: relative;
   background: #111;
   border: 2px solid #444;
   display: block;
+  z-index: 3;
 }
 
+/* Score */
 .score {
   position: absolute;
-  top: 16%;
+  top: 20%;
   left: 27%;
   transform: translate(-50%, -50%);
   font-size: 24px;
   color: white;
+  z-index: 3;
 }
 
-#start-button {
-  padding: 10px 20px;
-  position: absolute;
-  z-index: 10;
-  border-radius: 1.5rem;
-  font-family: bold;
-  font-size: 24px;
-  color: black;
-  background-color: rgb(0, 162, 255);
-  border: 2px solid #444;
-  cursor: pointer;
-}
-
-.tela-início #start-button:hover, .game-over #restart-button:hover {
-  background-color: rgb(0, 132, 255);
-}
-
-.tela-início #start-button:active, .game-over #restart-button:active {
-  background-color: rgb(53, 126, 223);
-}
-
-.tela-início #start-button:focus, .game-over #restart-button:focus {
-  outline: none;
-}
-
-.tela-início #start-button {
-  top: 20px;
-  left: 20px;
-  position: absolute;
-  z-index: 10;
-}
-
-.game-over #restart-button {
-  position: absolute;
-  top: 20px;
-  right: 20px;
-  z-index: 10;
-}
-
-.game-over #restart-button {
+/* PopUp de Game Over */
+#gameOverPopup {
   display: none;
-}
-
-.tela-início {
-  position: absolute;
+  position: fixed;
   top: 50%;
   left: 50%;
+  width: 30rem;
+  height: 20rem;
+  background: rgb(0, 68, 255);
+  border: #960000 2px solid;
+  border-radius: 10px;
   transform: translate(-50%, -50%);
-  text-align: center;
+  z-index: 100;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  box-shadow: 0 0 30px #000a;
 }
-
-.game-over {
-  position: absolute;
+#gameOverPopup.active {
+  display: flex;
+}
+#gameOverPopup h2 {
+  color: white;
+  font-size: 2rem;
+}
+#gameOverPopup .restart-Btn {
   padding: 10px 20px;
-  top: 40%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  font-size: 48px;
-  color: red;
-  display: none;
+  margin-top: 20px;
+  background: #444;
+  border: none;
+  border-radius: 5px;
+  color: white;
+  font-size: 1.5rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+#gameOverPopup .restart-Btn:hover {
+  background: #222;
+}
+/* Remover display:none do h2 global (não use para popup) */
+h2 {
+  display: block;
+  position: static;
+  width: auto;
+  height: auto;
+  background: none;
+  z-index: auto;
+  justify-content: flex-start;
+  align-items: flex-start;
+  flex-direction: row;
 }
