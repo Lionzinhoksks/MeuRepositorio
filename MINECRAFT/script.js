@@ -2,7 +2,6 @@
   const ctx = canvas.getContext('2d');
   const WIDTH = canvas.width;
   const HEIGHT = canvas.height;
-  // Jogador
   const player = {
     x: WIDTH / 2,
     y: HEIGHT / 2,
@@ -12,60 +11,71 @@
     vx: 0,
     vy: 0,
   };
-  // Tiros do jogador
   const shots = [];
   const shotSpeed = 8;
   const shotRadius = 5;
-  // Inimigos
-  const enemies = [];
-  const enemyRadius = 15;
-  const enemySpeed = 1.5;
-
+  const enemies1 = [];
+  const enemy1Radius = 15;
+  const enemy1Speed = 1.5;
+  const enemy2Radius = 20;
+  const enemy2Speed = 2.5;
+  const enemy3Radius = 30;
+  const enemy3Speed = 3.5;
   let keys = {};
   let gameOver = false;
+  let score = 0;
 
-  function spawnEnemy() {
-    // Spawnar inimigos nas bordas da tela
+  function spawnEnemy() {// Spawnar inimigos nas bordas da tela
     let side = Math.floor(Math.random() * 4);
     let x, y;
     switch(side) {
       case 0: // topo
         x = Math.random() * WIDTH;
-        y = -enemyRadius;
+        y = -enemy1Radius, -enemy2Radius, -enemy3Radius;
         break;
       case 1: // direita
-        x = WIDTH + enemyRadius;
+        x = WIDTH + enemy1Radius, enemy2Radius, enemy3Radius;
         y = Math.random() * HEIGHT;
         break;
       case 2: // baixo
         x = Math.random() * WIDTH;
-        y = HEIGHT + enemyRadius;
+        y = HEIGHT + enemy1Radius, enemy2Radius, enemy3Radius;
         break;
       case 3: // esquerda
-        x = -enemyRadius;
+        x = -enemy1Radius, -enemy2Radius, -enemy3Radius;
         y = Math.random() * HEIGHT;
         break;
     }
 
-    enemies.push({
+    enemies1.push({
       x,
       y,
-      radius: enemyRadius,
+      radius: enemy1Radius,
       color: 'red',
       vx: 0,
       vy: 0,
+      points: Math.floor(Math.random() * 10) + 1 // Pontos aleatórios de 1 a 10
     });
+    
+    if (Math.random() < 0.3) {// Alternar entre inimigos de diferentes tamanhos e velocidades
+      enemies1[enemies1.length - 1].radius = enemy2Radius;
+      enemies1[enemies1.length - 1].vx = Math.random() * enemy2Speed - enemy2Speed / 2;
+      enemies1[enemies1.length - 1].vy = Math.random() * enemy2Speed - enemy2Speed / 2;
+    } else if (Math.random() < 0.5) {
+      enemies1[enemies1.length - 1].radius = enemy3Radius;
+      enemies1[enemies1.length - 1].vx = Math.random() * enemy3Speed - enemy3Speed / 2;
+      enemies1[enemies1.length - 1].vy = Math.random() * enemy3Speed - enemy3Speed / 2;
+    }
   }
 
   function updateEnemies() {
-    enemies.forEach(enemy => {
-      // Movimentar inimigos em direção ao jogador
+    enemies1.forEach(enemy => {// Movimentar inimigos em direção ao jogador
       const dx = player.x - enemy.x;
       const dy = player.y - enemy.y;
       const dist = Math.sqrt(dx*dx + dy*dy);
 
-      enemy.vx = (dx / dist) * enemySpeed;
-      enemy.vy = (dy / dist) * enemySpeed;
+      enemy.vx = (dx / dist) * enemy1Speed;
+      enemy.vy = (dy / dist) * enemy1Speed;
 
       enemy.x += enemy.vx;
       enemy.y += enemy.vy;
@@ -77,23 +87,22 @@
       let shot = shots[i];
       shot.x += shot.vx;
       shot.y += shot.vy;
-
-      // Tirar tiros que saem da tela
-      if(shot.x < 0 || shot.x > WIDTH || shot.y < 0 || shot.y > HEIGHT) {
+      
+      if(shot.x < 0 || shot.x > WIDTH || shot.y < 0 || shot.y > HEIGHT) {// Tirar tiros que saem da tela
         shots.splice(i, 1);
         continue;
       }
-
-      // Verificar colisão com inimigos
-      for(let j = enemies.length -1; j >=0; j--) {
-        let enemy = enemies[j];
+      
+      for(let j = enemies1.length -1; j >=0; j--) {// Verificar colisão com inimigos
+        let enemy = enemies1[j];
         const dx = shot.x - enemy.x;
         const dy = shot.y - enemy.y;
-        const dist = Math.sqrt(dx*dx + dy*dy);
+        const dist = Math.sqrt(dx*dx + dy*dy);// Se a distância entre o tiro e o inimigo for menor que a soma dos raios, colidiu
 
         if(dist < shot.radius + enemy.radius) {
-          // Tiro acerta inimigo, removemos ambos
-          enemies.splice(j, 1);
+          score += enemy.points;
+          document.querySelector('.score').textContent = `Score: ${score}`;
+          enemies1.splice(j, 1);
           shots.splice(i, 1);
           break;
         }
@@ -102,13 +111,21 @@
   }
 
   function checkPlayerCollision() {
-    for(let enemy of enemies) {
+    for(let enemy of enemies1) {
       const dx = player.x - enemy.x;
       const dy = player.y - enemy.y;
       const dist = Math.sqrt(dx*dx + dy*dy);
 
-      if(dist < player.radius + enemy.radius) {
-        // Game over!
+      if(dist < player.radius + enemy.radius) {// Game over!
+        ctx.clearRect(0, 0, WIDTH, HEIGHT);
+        ctx.fillStyle = 'blue';
+        ctx.font = '48px Arial';
+        ctx.fillText('Game Over', WIDTH / 2 - 100, HEIGHT / 2);
+        ctx.fillText(`Score: ${score}`, WIDTH / 2 - 80, HEIGHT / 2 + 60);
+        ctx.fillText('Press R to Restart', WIDTH / 2 - 150, HEIGHT / 2 + 120);
+        document.getElementById('game-over').style.display = 'block';
+        document.querySelector('.score').textContent = `Score: ${score}`;
+        document.removeEventListener('keydown', restartGame);
         gameOver = true;
         document.getElementById('game-over').style.display = 'block';
       }
@@ -137,17 +154,11 @@
 
   function draw() {
     ctx.clearRect(0, 0, WIDTH, HEIGHT);
-
-    // Desenhar jogador
-    drawCircle(player.x, player.y, player.radius, 'cyan');
-
-    // Desenhar tiros
-    shots.forEach(shot => {
+    drawCircle(player.x, player.y, player.radius, 'cyan');// Desenhar jogador
+    shots.forEach(shot => {// Desenhar tiros
       drawCircle(shot.x, shot.y, shot.radius, 'yellow');
     });
-
-    // Desenhar inimigos
-    enemies.forEach(enemy => {
+    enemies1.forEach(enemy => {// Desenhar inimigos
       drawCircle(enemy.x, enemy.y, enemy.radius, 'red');
     });
   }
@@ -160,12 +171,11 @@
     updateShots();
     checkPlayerCollision();
     draw();
+    requestAnimationFrame(gameLoop);// Loop do jogo
 
-    requestAnimationFrame(gameLoop);
   }
 
-  // Atirar
-  function shoot() {
+  function shoot() {// Atirar
     shots.push({
       x: player.x,
       y: player.y - player.radius,
@@ -175,34 +185,18 @@
     });
   }
 
-  // Controle de teclado
-  window.addEventListener('keydown', (e) => {
+  window.addEventListener('keydown', (e) => {// Controle de teclado
     keys[e.key.toLowerCase()] = true;
-
     if(e.code === 'Space' && !gameOver) {
       shoot();
       e.preventDefault();
     }
   });
-
   window.addEventListener('keyup', (e) => {
     keys[e.key.toLowerCase()] = false;
   });
-
-  // Spawnar inimigos a cada 2 segundos
-  setInterval(() => {
+  setInterval(() => {// Spawnar inimigos a cada 2 segundos
     if(!gameOver) spawnEnemy();
-  }, 2500);
-
-  // Começa o jogo
-  gameLoop();
-
-  // Atualiza a pontuação
-  setInterval(() => {
-    if(!gameOver) {
-      score++;
-      document.querySelector('.score').textContent = `Score: ${score}`;
-    }
-
-  }, 1000);
-  
+    if(enemies1.length < 5) spawnEnemy(); // Limitar a quantidade de inimigos na tela
+  }, 3000);
+  gameLoop();// Começa o jogo
