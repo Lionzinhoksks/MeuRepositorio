@@ -3,14 +3,6 @@ const ctx = canvas.getContext('2d');
 const WIDTH = canvas.width;
 const HEIGHT = canvas.height;
 
-// Sprite dos inimigos
-const enemySprite = new Image();
-enemySprite.src = 'Images/MongSprite.png'; // Caminho relativo ao index.html
-
-const ENEMY_FRAMES = 12;
-const ENEMY_WIDTH = 640;
-const ENEMY_HEIGHT = 640;
-
 // Player
 const player = {
   x: WIDTH / 2,
@@ -29,9 +21,9 @@ const enemies1 = [];
 const enemy1Radius = 15;
 const enemy2Radius = 25;
 const enemy3Radius = 40;
-const enemy1Speed = 1.5;
-const enemy2Speed = 2.5;
-const enemy3Speed = 3.5;
+const enemy1Speed = 1.0;
+const enemy2Speed = 1.5;
+const enemy3Speed = 2.5;
 
 let keys = {};
 let gameOver = false;
@@ -40,7 +32,7 @@ let animationId = null;
 let spawnIntervalId = null;
 
 // Cria inimigos com tamanho e tipo aleatório
-function spawnEnemy() {
+function criaInimigo() {
   let side = Math.floor(Math.random() * 4);
   let x, y;
   switch (side) {
@@ -71,10 +63,8 @@ function spawnEnemy() {
   });
 }
 
-// Atualiza posição e animação dos inimigos
-function updateEnemies() {
+function atualizaInimigos() {
   enemies1.forEach(enemy => {
-    // Movimento em direção ao player
     const dx = player.x - enemy.x;
     const dy = player.y - enemy.y;
     const dist = Math.sqrt(dx * dx + dy * dy);
@@ -85,32 +75,11 @@ function updateEnemies() {
     enemy.vy = (dy / dist) * speed;
     enemy.x += enemy.vx;
     enemy.y += enemy.vy;
-
-    // Direção do sprite
-    let direction;
-    if (Math.abs(dx) > Math.abs(dy)) {
-      direction = dx > 0 ? 'right' : 'left';
-    } else {
-      direction = dy > 0 ? 'down' : 'up';
-    }
-    let baseFrame = 0;
-    switch (direction) {
-      case 'down': baseFrame = 0; break;
-      case 'left': baseFrame = 3; break;
-      case 'right': baseFrame = 6; break;
-      case 'up': baseFrame = 9; break;
-    }
-    enemy.frameTick++;
-    if (enemy.frameTick > 7) {
-      enemy.animFrame = (enemy.animFrame + 1) % 3;
-      enemy.frameTick = 0;
-    }
-    enemy.spriteFrame = baseFrame + enemy.animFrame;
   });
 }
 
 // Atualiza tiros e verifica colisão com inimigos
-function updateShots() {
+function atualizaTiros() {
   for (let i = shots.length - 1; i >= 0; i--) {
     let shot = shots[i];
     shot.x += shot.vx;
@@ -135,8 +104,7 @@ function updateShots() {
   }
 }
 
-// Verifica colisão do player com inimigos
-function checkPlayerCollision() {
+function checkColisãodoPlayer() {
   for (let enemy of enemies1) {
     const dx = player.x - enemy.x;
     const dy = player.y - enemy.y;
@@ -147,14 +115,12 @@ function checkPlayerCollision() {
       document.getElementById('finalScore').textContent = `Score: ${score}`;
       document.getElementById('game').style.display = 'none';
       document.querySelector('.score').style.display = 'none';
-      document.querySelector('h1').style.display = 'none';
-      break;
     }
   }
 }
 
 // Atualiza posição do player
-function updatePlayer() {
+function movimentaPlayer() {
   if (keys['ArrowUp'] || keys['w']) player.y -= player.speed;
   if (keys['ArrowDown'] || keys['s']) player.y += player.speed;
   if (keys['ArrowLeft'] || keys['a']) player.x -= player.speed;
@@ -166,7 +132,7 @@ function updatePlayer() {
 }
 
 // Desenha um círculo (player e tiros)
-function drawCircle(x, y, r, color) {
+function criaCirculos(x, y, r, color) {
   ctx.beginPath();
   ctx.fillStyle = color;
   ctx.arc(x, y, r, 0, Math.PI * 2);
@@ -174,18 +140,17 @@ function drawCircle(x, y, r, color) {
 }
 
 // Desenha tudo na tela
-function draw() {
+function cria() {
   ctx.clearRect(0, 0, WIDTH, HEIGHT);
-  drawCircle(player.x, player.y, player.radius, 'cyan');
+  criaCirculos(player.x, player.y, player.radius, 'cyan');
   shots.forEach(shot => {
-    drawCircle(shot.x, shot.y, shot.radius, 'yellow');
+    criaCirculos(shot.x, shot.y, shot.radius, 'yellow');
   });
   enemies1.forEach(enemy => {
-    ctx.drawImage(
-      enemySprite,
-      enemy.spriteFrame * ENEMY_WIDTH, 0, ENEMY_WIDTH, ENEMY_HEIGHT,
-      enemy.x - enemy.radius, enemy.y - enemy.radius, enemy.radius * 2, enemy.radius * 2
-    );
+    let color = 'red';
+    if (enemy.type === 2) color = 'red';
+    if (enemy.type === 3) color = 'red';
+    criaCirculos(enemy.x, enemy.y, enemy.radius, color);
   });
 }
 
@@ -216,13 +181,28 @@ window.addEventListener('keyup', (e) => {
 function startSpawnInterval() {
   if (spawnIntervalId) clearInterval(spawnIntervalId);
   spawnIntervalId = setInterval(() => {
-    if (!gameOver) spawnEnemy();
-    if (enemies1.length < 5) spawnEnemy();
-  }, 3000);
+    if (!gameOver) criaInimigo();
+    if (enemies1.length < 5) criaInimigo();
+  }, 2650);
 }
 
+function começarJogo() {
+  document.getElementById('startPopUp').classList.remove('active')
+  document.getElementById('gameOverPopup').style.display = 'none';
+  document.getElementById('game').style.display = 'block';
+  document.querySelector('.score').style.display = 'block';
+  score = 0;
+  enemies1.length = 0;
+  shots.length = 0;
+  player.x = WIDTH / 2;
+  player.y = HEIGHT / 2;
+  gameOver = false;
+  document.querySelector('.score').textContent = `Score: ${score}`;
+  startSpawnInterval();
+  jogoLoop();
+}
 // Reinicia o jogo
-function restartGame() {
+function resetaJogo() {
   if (animationId) {
     cancelAnimationFrame(animationId);
     animationId = null;
@@ -241,24 +221,23 @@ function restartGame() {
   document.getElementById('gameOverPopup').style.display = 'none';
   document.getElementById('game').style.display = 'block';
   document.querySelector('.score').style.display = 'block';
-  document.querySelector('h1').style.display = 'block';
   startSpawnInterval();
-  gameLoop();
+  jogoLoop();
 }
 
 // Loop principal do jogo
-function gameLoop() {
+function jogoLoop() {
   if (gameOver) return;
-  updatePlayer();
-  updateEnemies();
-  updateShots();
-  checkPlayerCollision();
-  draw();
-  animationId = requestAnimationFrame(gameLoop);
+  movimentaPlayer();
+  atualizaInimigos();
+  atualizaTiros();
+  checkColisãodoPlayer();
+  cria();
+  animationId = requestAnimationFrame(jogoLoop);
 }
-
-// Inicia o jogo após carregar o sprite
-enemySprite.onload = () => {
-  startSpawnInterval();
-  gameLoop();
+window.onload = () => {
+  document.getElementById('startPopup').classList.add('active');
+  document.getElementById('game').style.display = 'none';
+  document.querySelector('.score').style.display = 'none';
+  document.getElementById('titleContainer').style.display = 'block';
 };
