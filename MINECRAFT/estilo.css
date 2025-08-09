@@ -48,7 +48,6 @@ body {
   background-size: cover;
   z-index: 1;
 }
-
 /* Título centralizado */
 #titleContainer {
   position: absolute;
@@ -63,7 +62,6 @@ body {
   height: 45px;
   display: block;
 }
-
 /* Canvas do jogo */
 #game, canvas {
   position: relative;
@@ -72,7 +70,6 @@ body {
   display: block;
   z-index: 3;
 }
-
 /* Score */
 .score {
   position: absolute;
@@ -83,7 +80,39 @@ body {
   color: white;
   z-index: 3;
 }
-
+/* PopUp de início */
+#startPopUp {
+  display: flex;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  width: 30rem;
+  height: 20rem;
+  background: rgb(0, 68, 255);
+  border: #960000 2px solid;
+  border-radius: 10px;
+  transform: translate(-50%, -50%);
+  z-index: 100;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+#startPopUp.active {
+  display: flex;
+}
+#startPopUp .start-Btn {
+  padding: 10px 20px;
+  background: #444;
+  border: none;
+  border-radius: 5px;
+  color: white;
+  font-size: 1.5rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+#startPopUp .start-Btn:hover {
+  background: #222;
+}
 /* PopUp de Game Over */
 #gameOverPopup {
   display: none;
