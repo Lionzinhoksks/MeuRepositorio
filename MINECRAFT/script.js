@@ -155,7 +155,7 @@ function cria() {
 }
 
 // Cria um tiro
-function shoot() {
+function tiro() {
   shots.push({
     x: player.x,
     y: player.y - player.radius,
