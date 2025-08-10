@@ -3,7 +3,6 @@ const ctx = canvas.getContext('2d');
 const WIDTH = canvas.width;
 const HEIGHT = canvas.height;
 
-// Player
 const player = {
   x: WIDTH / 2,
   y: HEIGHT / 2,
@@ -31,15 +30,14 @@ let score = 0;
 let animationId = null;
 let spawnIntervalId = null;
 
-// Cria inimigos com tamanho e tipo aleatório
 function criaInimigo() {
   let side = Math.floor(Math.random() * 4);
   let x, y;
   switch (side) {
-    case 0: x = Math.random() * WIDTH; y = -enemy1Radius; break; // topo
-    case 1: x = WIDTH + enemy1Radius; y = Math.random() * HEIGHT; break; // direita
-    case 2: x = Math.random() * WIDTH; y = HEIGHT + enemy1Radius; break; // baixo
-    case 3: x = -enemy1Radius; y = Math.random() * HEIGHT; break; // esquerda
+    case 0: x = Math.random() * WIDTH; y = -enemy1Radius; break; 
+    case 1: x = WIDTH + enemy1Radius; y = Math.random() * HEIGHT; break; 
+    case 2: x = Math.random() * WIDTH; y = HEIGHT + enemy1Radius; break; 
+    case 3: x = -enemy1Radius; y = Math.random() * HEIGHT; break; 
   }
 
   let radius = enemy1Radius, type = 1;
@@ -53,7 +51,7 @@ function criaInimigo() {
     x,
     y,
     radius,
-    type, // 1, 2 ou 3
+    type, 
     vx: 0,
     vy: 0,
     points: Math.floor(Math.random() * 10) + 1,
@@ -78,7 +76,6 @@ function atualizaInimigos() {
   });
 }
 
-// Atualiza tiros e verifica colisão com inimigos
 function atualizaTiros() {
   for (let i = shots.length - 1; i >= 0; i--) {
     let shot = shots[i];
@@ -119,7 +116,6 @@ function checkColisãodoPlayer() {
   }
 }
 
-// Atualiza posição do player
 function movimentaPlayer() {
   if (keys['ArrowUp'] || keys['w']) player.y -= player.speed;
   if (keys['ArrowDown'] || keys['s']) player.y += player.speed;
@@ -131,7 +127,6 @@ function movimentaPlayer() {
   if (player.y > HEIGHT - player.radius) player.y = HEIGHT - player.radius;
 }
 
-// Desenha um círculo (player e tiros)
 function criaCirculos(x, y, r, color) {
   ctx.beginPath();
   ctx.fillStyle = color;
@@ -139,7 +134,6 @@ function criaCirculos(x, y, r, color) {
   ctx.fill();
 }
 
-// Desenha tudo na tela
 function cria() {
   ctx.clearRect(0, 0, WIDTH, HEIGHT);
   criaCirculos(player.x, player.y, player.radius, 'cyan');
@@ -154,8 +148,7 @@ function cria() {
   });
 }
 
-// Cria um tiro
-function tiro() {
+function shoot() {
   shots.push({
     x: player.x,
     y: player.y - player.radius,
@@ -165,7 +158,6 @@ function tiro() {
   });
 }
 
-// Controles do teclado
 window.addEventListener('keydown', (e) => {
   keys[e.key.toLowerCase()] = true;
   if (e.code === 'Space' && !gameOver) {
@@ -177,7 +169,6 @@ window.addEventListener('keyup', (e) => {
   keys[e.key.toLowerCase()] = false;
 });
 
-// Intervalo para spawnar inimigos
 function startSpawnInterval() {
   if (spawnIntervalId) clearInterval(spawnIntervalId);
   spawnIntervalId = setInterval(() => {
@@ -201,7 +192,7 @@ function começarJogo() {
   startSpawnInterval();
   jogoLoop();
 }
-// Reinicia o jogo
+
 function resetaJogo() {
   if (animationId) {
     cancelAnimationFrame(animationId);
@@ -225,7 +216,6 @@ function resetaJogo() {
   jogoLoop();
 }
 
-// Loop principal do jogo
 function jogoLoop() {
   if (gameOver) return;
   movimentaPlayer();
@@ -236,7 +226,7 @@ function jogoLoop() {
   animationId = requestAnimationFrame(jogoLoop);
 }
 window.onload = () => {
-  document.getElementById('startPopup').classList.add('active');
+  document.getElementById('startPopUp').classList.add('active');
   document.getElementById('game').style.display = 'none';
   document.querySelector('.score').style.display = 'none';
   document.getElementById('titleContainer').style.display = 'block';
