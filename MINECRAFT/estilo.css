@@ -98,7 +98,7 @@ body {
   flex-direction: column;
 }
 #startPopUp.active {
-  display: flex;
+  display: none;
 }
 #startPopUp .start-Btn {
   padding: 10px 20px;
