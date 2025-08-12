@@ -7,7 +7,7 @@ const player = {
   x: WIDTH / 2,
   y: HEIGHT / 2,
   radius: 15,
-  speed: 4,
+  speed: 3.50,
   color: 'cyan',
   vx: 0,
   vy: 0,
@@ -20,9 +20,9 @@ const enemies1 = [];
 const enemy1Radius = 15;
 const enemy2Radius = 25;
 const enemy3Radius = 40;
-const enemy1Speed = 1.0;
-const enemy2Speed = 1.5;
-const enemy3Speed = 2.5;
+const enemy1Speed = 0.75;
+const enemy2Speed = 1.25;
+const enemy3Speed = 2.25;
 
 let keys = {};
 let gameOver = false;
