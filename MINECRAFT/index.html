@@ -9,23 +9,22 @@
 <body>
     <div class="titleContainer">
         <span id="Wuggy">WUGGY</span>
-        <span id="Vs">Vs</span>
-        <span id="AmongUs">MONG US</span>
+        <span id="Vs">VS</span>
+        <span id="AmongUs">Mong Us</span>
     </div>
     <canvas id="game" width="750" height="525"></canvas>
-    <div id="startPopUp" class="active">
-        <span class="texto-inicial">
+    <div class="startContainer" class="active">
+        <span id="instructions">
             Use AWSD para mover o personagem<br>
             Use a barra de espaço para atirar<br>
         </span>
-        <button class="start-Btn" onclick="começarJogo()">Start</button>
+        <button id="start-Btn" onclick="começarJogo()">Start</button>
     </div>
-    <div class="gameOverPopup">
+    <div class="gameoverContainer">
         <h2 id="game-over">Game Over</h2>
         <p id="finalScore"></p>
-        <button class="restart-Btn" onclick="resetaJogo()">Restart</button>
+        <button id="restart-Btn" onclick="resetaJogo()">Restart</button>
     </div>
-    <div class="score"><a href="https://fontmeme.com/pt/fonte-de-among-us/"><img src="https://fontmeme.com/permalink/250812/fbe57d3fbe92ae2ab8dd8832710b8dd1.png" alt="fonte-de-among-us" border="0"></a></div>
     <script src="script.js"></script>
 </body>
 </html
