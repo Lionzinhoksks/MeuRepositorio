@@ -108,7 +108,7 @@ function checkColisãodoPlayer() {
     const dist = Math.sqrt(dx * dx + dy * dy);
     if (dist < player.radius + enemy.radius) {
       gameOver = true;
-      document.getElementById('gameOverPopup').style.display = 'flex';
+      document.getElementByClass('gameoverContainer').style.display = 'flex';
       document.getElementById('finalScore').textContent = `Score: ${score}`;
       document.getElementById('game').style.display = 'none';
       document.querySelector('.score').style.display = 'none';
@@ -178,8 +178,8 @@ function startSpawnInterval() {
 }
 
 function começarJogo() {
-  document.getElementById('startPopUp').classList.remove('active')
-  document.getElementById('gameOverPopup').style.display = 'none';
+  document.getElementByClass('startContainer').classList.remove('active')
+  document.getElementByClass('gameoverContainer').style.display = 'none';
   document.getElementById('game').style.display = 'block';
   document.querySelector('.score').style.display = 'block';
   score = 0;
@@ -209,7 +209,7 @@ function resetaJogo() {
   shots.length = 0;
   gameOver = false;
   document.querySelector('.score').textContent = `Score: ${score}`;
-  document.getElementById('gameOverPopup').style.display = 'none';
+  document.getElementByClass('gameoverContainer').style.display = 'none';
   document.getElementById('game').style.display = 'block';
   document.querySelector('.score').style.display = 'block';
   startSpawnInterval();
@@ -226,8 +226,8 @@ function jogoLoop() {
   animationId = requestAnimationFrame(jogoLoop);
 }
 window.onload = () => {
-  document.getElementById('startPopUp').classList.add('active');
+  document.getElementByClass('startContainer').classList.add('active');
   document.getElementById('game').style.display = 'none';
   document.querySelector('.score').style.display = 'none';
-  document.getElementById('titleContainer').style.display = 'block';
+  document.getElementByClass('titleContainer').style.display = 'block';
 };
