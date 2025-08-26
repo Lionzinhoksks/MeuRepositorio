@@ -178,56 +178,56 @@ function startSpawnInterval() {
 }
 
 function começarJogo() {
-  document.querySelector('.startContainer').classList.remove('active')
-  document.querySelector('.gameoverContainer').style.display = 'none';
-  document.getElementById('game').style.display = 'block';
-  document.querySelector('.score').style.display = 'block';
-  score = 0;
-  enemies1.length = 0;
-  shots.length = 0;
-  player.x = WIDTH / 2;
-  player.y = HEIGHT / 2;
-  gameOver = false;
-  document.querySelector('.score').textContent = `Score: ${score}`;
-  startSpawnInterval();
-  jogoLoop();
+    document.querySelector('.startContainer').classList.remove('active')
+    document.querySelector('.gameoverContainer').style.display = 'none';
+    document.getElementById('game').style.display = 'block';
+    document.querySelector('.score').style.display = 'block';
+    score = 0;
+    enemies1.length = 0;
+    shots.length = 0;
+    player.x = WIDTH / 2;
+    player.y = HEIGHT / 2;
+    gameOver = false;
+    document.querySelector('.score').textContent = `Score: ${score}`;
+    startSpawnInterval();
+    jogoLoop();
 }
 
 function resetaJogo() {
-  if (animationId) {
-    cancelAnimationFrame(animationId);
-    animationId = null;
-  }
-  if (spawnIntervalId) {
-    clearInterval(spawnIntervalId);
-    spawnIntervalId = null;
-  }
-  player.x = WIDTH / 2;
-  player.y = HEIGHT / 2;
-  score = 0;
-  enemies1.length = 0;
-  shots.length = 0;
-  gameOver = false;
-  document.querySelector('.score').textContent = `Score: ${score}`;
-  document.querySelector('.gameoverContainer').style.display = 'none';
-  document.getElementById('game').style.display = 'block';
-  document.querySelector('.score').style.display = 'block';
-  startSpawnInterval();
-  jogoLoop();
+    if (animationId) {
+        cancelAnimationFrame(animationId);
+        animationId = null;
+} 
+    if (spawnIntervalId) {
+        clearInterval(spawnIntervalId);
+        spawnIntervalId = null;
+}
+    player.x = WIDTH / 2;
+    player.y = HEIGHT / 2;
+    score = 0;
+    enemies1.length = 0;
+    shots.length = 0;
+    gameOver = false;
+    document.querySelector('.score').textContent = `Score: ${score}`;
+    document.querySelector('.gameoverContainer').style.display = 'none';
+    document.getElementById('game').style.display = 'block';
+    document.querySelector('.score').style.display = 'block';
+    startSpawnInterval();
+    jogoLoop();
 }
 
 function jogoLoop() {
-  if (gameOver) return;
-  movimentaPlayer();
-  atualizaInimigos();
-  atualizaTiros();
-  checkColisãodoPlayer();
-  cria();
-  animationId = requestAnimationFrame(jogoLoop);
+    if (gameOver) return;
+    movimentaPlayer();
+    atualizaInimigos();
+    atualizaTiros();
+    checkColisãodoPlayer();
+    cria();
+    animationId = requestAnimationFrame(jogoLoop);
 }
 window.onload = () => {
-  document.querySelector('.startContainer').classList.add('active');
-  document.getElementById('game').style.display = 'none';
-  document.querySelector('.score').style.display = 'none';
-  document.querySelector('.titleContainer').style.display = 'block';
+    document.querySelector('.startContainer').classList.add('active');
+    document.getElementById('game').style.display = 'none';
+    document.querySelector('.score').style.display = 'none';
+    document.querySelector('.titleContainer').style.display = 'block';
 };
