@@ -1,6 +1,5 @@
 @import url('https://fonts.cdnfonts.com/css/vcr-osd-mono');
 @import url('https://fonts.googleapis.com/css2?family=Amatic+SC:wght@400;700&display=swap');
-@import url('https://fonts.cdnfonts.com/css/tekken-6-2');
 
 * {
   user-select: none;
@@ -27,28 +26,28 @@ body {
   gap: 1.0rem;
 }
 .titleContainer #Wuggy {
-  color: blue;
+  color: rgb(0, 13, 192);
   font-style: normal;
   font-weight: 500;
   font-size: 3.5rem;
-  font-family: 'VCR OSD Mono';
+  font-family: 'VCR OSD Mono', sans-serif;
 }
 .titleContainer #Vs {
   color: red;
   font-style: normal;
-  font-weight: bold;
   font-size: 1.75rem;
-  font-family: 'tekken 6 2', sans-serif;
+  font-family: 'Times New Roman', serif;
                                                 
 }
 .titleContainer #AmongUs {
-  color: white;
+  color: rgb(0, 0, 0);
   font-style: normal;
   font-weight: 400;
   font-size: 3.5rem;
-  font-family: 'Amatic Sc';
+  font-family: 'Amatic Sc', sans-serif;
 }
-.titleContainer #game, canvas {
+
+canvas {
   position: absolute;
   top: 15%;
   background: #111;
@@ -59,7 +58,7 @@ body {
 .score {
   position: absolute;
   top: 20%;
-  left: 27%;
+  left: 30%;
   transform: translate(-50%, -50%);
   font-size: 2rem;
   font-family: 'Amatic Sc', sans-serif;
@@ -73,30 +72,36 @@ body {
   left: 50%;
   width: 30rem;
   height: 20rem;
-  background: rgb(0, 68, 255);
-  border: #960000 2px solid;
-  border-radius: 10px;
+  background: rgb(0, 13, 192);
+  border: #ff0000 2px solid;
   transform: translate(-50%, -50%);
   z-index: 100;
   justify-content: center;
   align-items: center;
   flex-direction: column;
 }
-.startContainer .active {
+.startContainer #instructions {
+  font-size: 1.45rem;
+  margin-bottom: 20px;
+  text-align: center;
+  font-family: 'VCR OSD MONO', sans-serif;
+  color: white;
+}
+.startContainer.active {
   display: flex;
 }
 .startContainer #start-Btn {
   padding: 10px 20px;
-  background: #444;
-  border: none;
-  border-radius: 5px;
+  background: #ff0000;
+  border: rgb(0, 13, 192) 0.15rem solid;
   color: white;
-  font-size: 1.5rem;
+  font-family: 'Amatic Sc', sans-serif;
+  font-size: 1.75rem;
   cursor: pointer;
   transition: background 0.2s;
 }
 .startContainer #start-Btn:hover {
-  background: #222;
+  background: #850000;
 }
 .gameoverContainer {
   display: none;
@@ -105,9 +110,8 @@ body {
   left: 50%;
   width: 30rem;
   height: 20rem;
-  background: rgb(0, 68, 255);
-  border: #960000 2px solid;
-  border-radius: 10px;
+  background: rgb(0, 13, 192);
+  border: #ff0000 2px solid;
   transform: translate(-50%, -50%);
   z-index: 100;
   justify-content: center;
@@ -115,33 +119,31 @@ body {
   flex-direction: column;
   box-shadow: 0 0 30px #000a;
 }
-.gameoverContainer .active {
+.gameoverContainer.active {
   display: flex;
 }
 .gameoverContainer #restart-Btn {
   padding: 10px 20px;
   margin-top: 20px;
-  background: #444;
-  border: none;
+  background: #ff0000;
+  border: rgb(0, 13, 192) 0.15rem solid;
   border-radius: 5px;
   color: white;
-  font-size: 1.5rem;
+  font-family: 'VCR OSD Mono', sans-serif;
+  font-size: 1.75rem;
   cursor: pointer;
   transition: background 0.2s;
 }
 .gameoverContainer #restart-Btn:hover {
-  background: #222;
+  background: #850000;
 }
 .gameoverContainer #game-over {
-  display: block;
-  position: static;
-  width: auto;
-  height: auto;
-  background: none;
-  z-index: auto;
-  justify-content: flex-start;
-  align-items: flex-start;
-  flex-direction: row;
-  color: rgb(255, 0, 0), black;
-  font-family: 'VCR OSD Mono', sans-serif;
+  font-family: 'Amatic Sc', sans-serif;
+  font-size: 4.5rem;
+  color: white;
+}
+.gameoverContainer #finalScore {
+  font-size: 2.5rem;
+  font-family: 'VCR OSD MONO', sans-serif;
+  color: white;
 }
