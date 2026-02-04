@@ -23,12 +23,17 @@ const enemy3Radius = 40;
 const enemy1Speed = 0.75;
 const enemy2Speed = 1.25;
 const enemy3Speed = 2.25;
+const items = [];
+const shieldRadius = 50;
 
 let keys = {};
 let gameOver = false;
 let score = 0;
 let animationId = null;
 let spawnIntervalId = null;
+let shieldActive = false;
+let shieldDuration = 0;
+let shieldMaxDuration = 300; // 5 segundos (300 frames a 60fps)
 
 function criaInimigo() {
   let side = Math.floor(Math.random() * 4);
@@ -101,17 +106,72 @@ function atualizaTiros() {
   }
 }
 
+function criaItem(x, y, type = 'shield') {
+  items.push({
+    x,
+    y,
+    radius: 10,
+    type,
+    vx: (Math.random() - 0.5) * 2,
+    vy: (Math.random() - 0.5) * 2
+  });
+}
+
+function atualizaItems() {
+  for (let i = items.length - 1; i >= 0; i--) {
+    let item = items[i];
+    item.x += item.vx;
+    item.y += item.vy;
+    
+    // Verifica colisão com o player
+    const dx = player.x - item.x;
+    const dy = player.y - item.y;
+    const dist = Math.sqrt(dx * dx + dy * dy);
+    
+    if (dist < player.radius + item.radius) {
+      if (item.type === 'shield') {
+        shieldActive = true;
+        shieldDuration = shieldMaxDuration;
+      }
+      items.splice(i, 1);
+      continue;
+    }
+    
+    // Remove items que saem da tela
+    if (item.x < -20 || item.x > WIDTH + 20 || item.y < -20 || item.y > HEIGHT + 20) {
+      items.splice(i, 1);
+    }
+  }
+}
+
+function atualizaEscudo() {
+  if (shieldActive) {
+    shieldDuration--;
+    if (shieldDuration <= 0) {
+      shieldActive = false;
+    }
+  }
+}
+
 function checkColisãodoPlayer() {
   for (let enemy of enemies1) {
     const dx = player.x - enemy.x;
     const dy = player.y - enemy.y;
     const dist = Math.sqrt(dx * dx + dy * dy);
     if (dist < player.radius + enemy.radius) {
-      gameOver = true;
-      document.querySelector('.gameoverContainer').style.display = 'flex';
-      document.getElementById('finalScore').textContent = `Score: ${score}`;
-      document.getElementById('game').style.display = 'none';
-      document.querySelector('.score').style.display = 'none';
+      if (shieldActive) {
+        // Escudo absorve o dano
+        shieldActive = false;
+        // Remove o inimigo que colidiu com o escudo
+        const index = enemies1.indexOf(enemy);
+        if (index > -1) enemies1.splice(index, 1);
+      } else {
+        gameOver = true;
+        document.querySelector('.gameoverContainer').style.display = 'flex';
+        document.getElementById('finalScore').textContent = `Score: ${score}`;
+        document.getElementById('game').style.display = 'none';
+        document.querySelector('.score').style.display = 'none';
+      }
     }
   }
 }
@@ -136,10 +196,39 @@ function criaCirculos(x, y, r, color) {
 
 function cria() {
   ctx.clearRect(0, 0, WIDTH, HEIGHT);
+  
+  // Desenha o escudo se ativo
+  if (shieldActive) {
+    const alpha = shieldDuration / shieldMaxDuration;
+    ctx.beginPath();
+    ctx.strokeStyle = `rgba(0, 255, 255, ${alpha * 0.6})`;
+    ctx.lineWidth = 3;
+    ctx.arc(player.x, player.y, shieldRadius, 0, Math.PI * 2);
+    ctx.stroke();
+    
+  }
+  
   criaCirculos(player.x, player.y, player.radius, 'cyan');
+  
   shots.forEach(shot => {
     criaCirculos(shot.x, shot.y, shot.radius, 'yellow');
   });
+  
+  items.forEach(item => {
+    if (item.type === 'shield') {
+      // Desenha o item de escudo com animação
+      const pulse = Math.sin(Date.now() / 200) * 3;
+      ctx.beginPath();
+      ctx.fillStyle = 'rgba(0, 255, 255, 0.8)';
+      ctx.arc(item.x, item.y, item.radius + pulse, 0, Math.PI * 2);
+      ctx.fill();
+      
+      // Desenha um quadrado interno
+      ctx.fillStyle = 'rgba(100, 200, 255, 0.6)';
+      ctx.fillRect(item.x - item.radius / 2, item.y - item.radius / 2, item.radius, item.radius);
+    }
+  });
+  
   enemies1.forEach(enemy => {
     let color = 'red';
     if (enemy.type === 2) color = 'red';
@@ -172,7 +261,15 @@ window.addEventListener('keyup', (e) => {
 function startSpawnInterval() {
   if (spawnIntervalId) clearInterval(spawnIntervalId);
   spawnIntervalId = setInterval(() => {
-    if (!gameOver) criaInimigo();
+    if (!gameOver) {
+      criaInimigo();
+      // 30% de chance de criar um item de escudo
+      if (Math.random() < 0.3) {
+        const x = Math.random() * WIDTH;
+        const y = Math.random() * HEIGHT;
+        criaItem(x, y, 'shield');
+      }
+    }
     if (enemies1.length < 5) criaInimigo();
   }, 2650);
 }
@@ -185,9 +282,12 @@ function começarJogo() {
     score = 0;
     enemies1.length = 0;
     shots.length = 0;
+    items.length = 0;
     player.x = WIDTH / 2;
     player.y = HEIGHT / 2;
     gameOver = false;
+    shieldActive = false;
+    shieldDuration = 0;
     document.querySelector('.score').textContent = `Score: ${score}`;
     startSpawnInterval();
     jogoLoop();
@@ -207,7 +307,10 @@ function resetaJogo() {
     score = 0;
     enemies1.length = 0;
     shots.length = 0;
+    items.length = 0;
     gameOver = false;
+    shieldActive = false;
+    shieldDuration = 0;
     document.querySelector('.score').textContent = `Score: ${score}`;
     document.querySelector('.gameoverContainer').style.display = 'none';
     document.getElementById('game').style.display = 'block';
@@ -221,6 +324,8 @@ function jogoLoop() {
     movimentaPlayer();
     atualizaInimigos();
     atualizaTiros();
+    atualizaItems();
+    atualizaEscudo();
     checkColisãodoPlayer();
     cria();
     animationId = requestAnimationFrame(jogoLoop);
